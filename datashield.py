@@ -245,9 +245,9 @@ if st.session_state.logged_in:
 
         
 
-file = st.file_uploader("Upload your CSV file")
+file = st.file_uploader("Upload your file", type=["csv", "xlsx"])
 
-if file is not None:
+if file.name.endswith(".csv"):
         try:
                 data = pd.read_csv(file, encoding="utf-8")
                 st.success("File uploaded successfully")
@@ -257,11 +257,14 @@ if file is not None:
 
                 
 
-        except Exception as e:
+        except:
                 file.seek(0)
                 data = pd.read_csv(file, encoding="latin1")
                 st.success("File uploaded successfully")
                 st.dataframe(data.head())
+
+elif file.name.endswith(".xlsx"):
+        data = pd.read_excel(file)
 
         columns = data.columns.tolist()
                         
