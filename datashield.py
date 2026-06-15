@@ -246,9 +246,10 @@ if st.session_state.logged_in:
         
 
 file = st.file_uploader("Upload your file", type=["csv", "xlsx"])
+if file is not None:
 
-if file.name.endswith(".csv"):
-        try:
+  if file.name.endswith(".csv"):
+          try:
                 data = pd.read_csv(file, encoding="utf-8")
                 st.success("File uploaded successfully")
                 st.write(data.head())
@@ -263,8 +264,8 @@ if file.name.endswith(".csv"):
                 st.success("File uploaded successfully")
                 st.dataframe(data.head())
 
-elif file.name.endswith(".xlsx"):
-        data = pd.read_excel(file)
+  elif file.name.endswith(".xlsx"):
+   data = pd.read_excel(file)
 
         columns = data.columns.tolist()
                         
