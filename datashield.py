@@ -264,7 +264,7 @@ if file is not None:
                         st.dataframe(data.head())
 
       elif file.name.endswith(".xlsx"):
-              data = pd.read_excel(file)
+              data = pd.read_excel(file, ENGINE="openpyxl")
 
         columns = data.columns.tolist()
                         
