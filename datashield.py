@@ -263,8 +263,8 @@ if file is not None:
                         st.success("File uploaded successfully")
                         st.dataframe(data.head())
 
-      elif file.name.endswith(".xlsx"):
-              data = pd.read_excel(file, ENGINE="openpyxl")
+        elif file.name.endswith(".xlsx"):
+                data = pd.read_excel(file, ENGINE="openpyxl")
 
         columns = data.columns.tolist()
                         
