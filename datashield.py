@@ -38,97 +38,50 @@ st.markdown(
 
 
 
-
-USERS_FILE = "users.json"
-
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+FILE = "users.json"
 
 
+# Load users from JSON file
 def load_users():
-    if not os.path.exists(USERS_FILE):
+    if not os.path.exists(FILE):
         return {}
-
-    with open(USERS_FILE, "r") as file:
-        try:
-            return json.load(file)
-        except json.JSONDecodeError:
-            return {}
+    with open(FILE, "r") as f:
+        return json.load(f)
 
 
+# Save users to JSON file
 def save_users(users):
-    with open(USERS_FILE, "w") as file:
-        json.dump(users, file, indent=4)
+    with open(FILE, "w") as f:
+        json.dump(users, f, indent=4)
 
 
-def register(username, password):
+# Register new user
+def register():
     users = load_users()
 
+    username = input("Enter new username: ")
     if username in users:
-        print("Username already exists.")
-        return False
+        print("Username already exists!")
+        return
 
-    users[username] = {
-        "password": hash_password(password)
-    }
+    password = input("Enter new password: ")
+    users[username] = password
 
     save_users(users)
-    print("Registration successful.")
-    return True
+    print("User registered successfully!")
 
 
-def login(username, password):
+# Login user
+def login():
     users = load_users()
 
-    if username not in users:
-        print("User not found.")
-        return False
+    username = input("Enter username: ")
+    password = input("Enter password: ")
 
-    hashed_password = hash_password(password)
-
-    if users[username]["password"] == hashed_password:
-        print("Login successful.")
-        return True
+    if username in users and users[username] == password:
+        print("Login successful! Welcome,", username)
     else:
-        print("Incorrect password.")
-        return False
-
-
-def main():
-    while True:
-        print("\n1. Register")
-        print("2. Login")
-        print("3. Exit")
-
-        choice = input("Choose an option: ")
-
-        if choice == "1":
-            username = input("Username: ")
-            password = input("Password: ")
-            register(username, password)
-
-        elif choice == "2":
-            username = input("Username: ")
-            password = input("Password: ")
-            login(username, password)
-
-        elif choice == "3":
-            print("Goodbye!")
-            break
-
-        else:
-            print("Invalid choice.")
-
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
+        print("Invalid username or password!")
 
 
 
