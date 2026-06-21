@@ -38,55 +38,93 @@ st.markdown(
 
 
 
-FILE = "users.json"
+import streamlit as st
+import json
+import hashlib
+import os
 
+USERS_FILE = "users.json"
 
-# Load users from JSON file
+# ---------- Utility functions ----------
+
 def load_users():
-    if not os.path.exists(FILE):
+    if not os.path.exists(USERS_FILE):
         return {}
-    with open(FILE, "r") as f:
+    with open(USERS_FILE, "r") as f:
         return json.load(f)
 
-
-# Save users to JSON file
 def save_users(users):
-    with open(FILE, "w") as f:
+    with open(USERS_FILE, "w") as f:
         json.dump(users, f, indent=4)
 
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
-# Register new user
-def register():
-    users = load_users()
-
-    username = input("Enter new username: ")
+def authenticate(username, password, users):
     if username in users:
-        print("Username already exists!")
-        return
+        return users[username]["password"] == hash_password(password)
+    return False
 
-    password = input("Enter new password: ")
-    users[username] = password
+# ---------- Session state ----------
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "user" not in st.session_state:
+    st.session_state.user = None
 
-    save_users(users)
-    print("User registered successfully!")
+users = load_users()
 
+# ---------- UI ----------
+st.title("🔐 Streamlit Login System (JSON based)")
 
-# Login user
-def login():
-    users = load_users()
+menu = ["Login", "Register", "Dashboard"]
+choice = st.sidebar.selectbox("Menu", menu)
 
-    username = input("Enter username: ")
-    password = input("Enter password: ")
+# ---------- Register ----------
+if choice == "Register":
+    st.subheader("Create New Account")
 
-    if username in users and users[username] == password:
-        print("Login successful! Welcome,", username)
+    new_user = st.text_input("Username")
+    new_pass = st.text_input("Password", type="password")
+
+    if st.button("Register"):
+        if new_user in users:
+            st.error("User already exists!")
+        elif new_user == "" or new_pass == "":
+            st.warning("Please fill all fields")
+        else:
+            users[new_user] = {
+                "password": hash_password(new_pass)
+            }
+            save_users(users)
+            st.success("Account created successfully!")
+
+# ---------- Login ----------
+elif choice == "Login":
+    st.subheader("Login to your account")
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if authenticate(username, password, users):
+            st.session_state.logged_in = True
+            st.session_state.user = username
+            st.success(f"Welcome {username}!")
+        else:
+            st.error("Invalid username or password")
+
+# ---------- Dashboard ----------
+elif choice == "Dashboard":
+    if st.session_state.logged_in:
+        st.subheader(f"👋 Hello {st.session_state.user}")
+        st.write("You are successfully logged in.")
+
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.user = None
+            st.rerun()
     else:
-        print("Invalid username or password!")
-
-
-
-
-
+        st.warning("Please login first to access dashboard.")
 
 
 
