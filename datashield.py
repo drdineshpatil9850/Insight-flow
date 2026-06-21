@@ -37,61 +37,92 @@ st.markdown(
 
 
 
-import re
 
-def is_strong_password(password):
-    """
-    Password must:
-    - Be at least 8 characters long
-    - Contain uppercase and lowercase letters
-    - Contain a number
-    - Contain a special character
-    """
-    if len(password) < 8:
+
+USERS_FILE = "users.json"
+
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+def load_users():
+    if not os.path.exists(USERS_FILE):
+        return {}
+
+    with open(USERS_FILE, "r") as file:
+        try:
+            return json.load(file)
+        except json.JSONDecodeError:
+            return {}
+
+
+def save_users(users):
+    with open(USERS_FILE, "w") as file:
+        json.dump(users, file, indent=4)
+
+
+def register(username, password):
+    users = load_users()
+
+    if username in users:
+        print("Username already exists.")
         return False
 
-    if not re.search(r"[A-Z]", password):
-        return False
+    users[username] = {
+        "password": hash_password(password)
+    }
 
-    if not re.search(r"[a-z]", password):
-        return False
-
-    if not re.search(r"\d", password):
-        return False
-
-    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-        return False
-
+    save_users(users)
+    print("Registration successful.")
     return True
 
 
-# Registration
-print("=== Create Account ===")
-username = input("Create username: ")
+def login(username, password):
+    users = load_users()
 
-while True:
-    password = input("Create strong password: ")
+    if username not in users:
+        print("User not found.")
+        return False
 
-    if is_strong_password(password):
-        print("Account created successfully!\n")
-        break
+    hashed_password = hash_password(password)
+
+    if users[username]["password"] == hashed_password:
+        print("Login successful.")
+        return True
     else:
-        print(
-            "Password must be at least 8 characters long and contain "
-            "uppercase, lowercase, number, and special character."
-        )
+        print("Incorrect password.")
+        return False
 
-# Login
-print("=== Login ===")
-login_username = input("Username: ")
-login_password = input("Password: ")
 
-if login_username == username and login_password == password:
-    print("\nLogin successful!")
-    print(f"Welcome, {username}!")
-else:
-    print("\nInvalid username or password.")
+def main():
+    while True:
+        print("\n1. Register")
+        print("2. Login")
+        print("3. Exit")
 
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            username = input("Username: ")
+            password = input("Password: ")
+            register(username, password)
+
+        elif choice == "2":
+            username = input("Username: ")
+            password = input("Password: ")
+            login(username, password)
+
+        elif choice == "3":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid choice.")
+
+
+if __name__ == "__main__":
+    main()
 
 
 
