@@ -19,7 +19,7 @@ import os
 
 
 
-st.title("Datashield AI")
+st.title("Insight flow")
 st.markdown(
         """
 
@@ -37,115 +37,60 @@ st.markdown(
 
 
 
+import re
 
-# File to store user data
-USER_FILE = "users.json"
+def is_strong_password(password):
+    """
+    Password must:
+    - Be at least 8 characters long
+    - Contain uppercase and lowercase letters
+    - Contain a number
+    - Contain a special character
+    """
+    if len(password) < 8:
+        return False
 
+    if not re.search(r"[A-Z]", password):
+        return False
 
-# -----------------------------
-# Load users from JSON file
-# -----------------------------
-def load_users():
-    if os.path.exists(USER_FILE):
-        with open(USER_FILE, "r") as f:
-            return json.load(f)
-    return {}
+    if not re.search(r"[a-z]", password):
+        return False
 
+    if not re.search(r"\d", password):
+        return False
 
-# -----------------------------
-# Save users to JSON file
-# -----------------------------
-def save_users(users):
-    with open(USER_FILE, "w") as f:
-        json.dump(users, f)
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        return False
 
-
-# -----------------------------
-# Hash password for security
-# -----------------------------
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+    return True
 
 
-# -----------------------------
-# Initialize session state
-# -----------------------------
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+# Registration
+print("=== Create Account ===")
+username = input("Create username: ")
 
-if "username" not in st.session_state:
-    st.session_state.username = ""
+while True:
+    password = input("Create strong password: ")
 
+    if is_strong_password(password):
+        print("Account created successfully!\n")
+        break
+    else:
+        print(
+            "Password must be at least 8 characters long and contain "
+            "uppercase, lowercase, number, and special character."
+        )
 
-# -----------------------------
-# Load existing users
-# -----------------------------
-users = load_users()
+# Login
+print("=== Login ===")
+login_username = input("Username: ")
+login_password = input("Password: ")
 
-st.title("🔐 Streamlit Login System")
-
-menu = ["Login", "Register"]
-choice = st.sidebar.selectbox("Menu", menu)
-
-
-# -----------------------------
-# REGISTER PAGE
-# -----------------------------
-if choice == "Register":
-    st.subheader("Create New Account")
-
-    new_user = st.text_input("Username")
-    new_password = st.text_input("Password", type="password")
-
-    if st.button("Register"):
-        if new_user in users:
-            st.error("Username already exists!")
-        elif new_user == "" or new_password == "":
-            st.warning("Please enter username and password.")
-        else:
-            users[new_user] = hash_password(new_password)
-            save_users(users)
-            st.success("Account created successfully!")
-            st.info("Go to Login menu to sign in.")
-
-
-# -----------------------------
-# LOGIN PAGE
-# -----------------------------
-elif choice == "Login":
-    st.subheader("Login to Your Account")
-
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Login"):
-        hashed_password = hash_password(password)
-
-        if username in users and users[username] == hashed_password:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.success(f"Welcome {username}!")
-        else:
-            st.error("Invalid username or password")
-
-
-# -----------------------------
-# AFTER LOGIN
-# -----------------------------
-if st.session_state.logged_in:
-    st.sidebar.success(f"Logged in as {st.session_state.username}")
-
-    st.header("🏠 Home Page")
-    st.write("You are successfully logged in.")
-
-    if st.button("Logout"):
-        st.session_state.logged_in = False
-        st.session_state.username = ""
-        st.rerun()
-
-
-
-
+if login_username == username and login_password == password:
+    print("\nLogin successful!")
+    print(f"Welcome, {username}!")
+else:
+    print("\nInvalid username or password.")
 
 
 
