@@ -39,12 +39,12 @@ header{
     background:linear-gradient(#2563eb,#06b6d4);
     color:white;
     text-align:center;
-    padding:80px 20px;
+    
 }
 
 header h1{
     font-size:3.5rem;
-    margin-bottom:15px;
+    
 }
 
 header p{
@@ -62,19 +62,15 @@ header p{
 
 .card{
     background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+   
     transition:.3s;
 }
 
-.card:hover{
-    transform:translateY(-5px);
-}
+
 
 .card h3{
     color:#2563eb;
-    margin-bottom:10px;
+    
 }
 
 
@@ -94,7 +90,7 @@ header p{
     background:white;
    
     
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+   
 }
 
 .chart-title{
@@ -132,11 +128,10 @@ header p{
 
 .upload-section{
     background:white;
-    padding:40px;
-    border-radius:20px;
+    
     text-align:center;
     
-    margin:60px 0;
+    
 }
 
 .upload-section h2{
