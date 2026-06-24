@@ -93,8 +93,7 @@ header p{
    
 }
 
-.chart-title{
-  
+
 
 .bar-chart{
     display:flex;
