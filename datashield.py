@@ -49,22 +49,16 @@ header h1{
 
 header p{
     font-size:1.2rem;
-    max-width:700px;
+   
     margin:auto;
 }
 
 .container{
     width:90%;
-    max-width:1200px;
+   
     margin:auto;
 }
 
-.features{
-    display:grid;
-    grid-template-columns:repeat(250px,1fr);
-    gap:20px;
-    margin:60px 0;
-}
 
 .card{
     background:white;
@@ -83,43 +77,38 @@ header p{
     margin-bottom:10px;
 }
 
-.analytics{
-    margin:60px 0;
-}
+
 
 .analytics h2{
     text-align:center;
-    margin-bottom:30px;
+   
 }
 
 .chart-container{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:25px;
+    grid-template-columns:repeat(auto-fit,minmax(1fr));
+   
 }
 
 .chart-card{
     background:white;
-    padding:20px;
-    border-radius:15px;
+   
+    
     box-shadow:0 5px 15px rgba(0,0,0,0.08);
 }
 
 .chart-title{
-    margin-bottom:15px;
-    font-weight:600;
-}
+  
 
 .bar-chart{
     display:flex;
     align-items:flex-end;
-    gap:15px;
-    height:180px;
+  
 }
 
 .bar{
     flex:1;
-    border-radius:8px 8px 0 0;
+   
     background:linear-gradient(to top,#2563eb,#60a5fa);
 }
 
@@ -130,8 +119,7 @@ header p{
 .b5{height:75%;}
 
 .pie-chart{
-    width:180px;
-    height:180px;
+   
     margin:auto;
     border-radius:50%;
     background:
@@ -147,43 +135,36 @@ header p{
     padding:40px;
     border-radius:20px;
     text-align:center;
-    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    
     margin:60px 0;
 }
 
 .upload-section h2{
-    margin-bottom:15px;
+   
 }
 
 .upload-section p{
-    margin-bottom:20px;
+    
     color:#666;
 }
 
 input[type="file"]{
-    padding:10px;
+  
 }
 
 .cta{
     text-align:center;
-    padding:60px 20px;
-}
+   }
 
-.cta h2{
-    margin-bottom:15px;
-}
 
-.cta p{
-    margin-bottom:25px;
-}
+   
+
 
 .btn{
     background:#2563eb;
     color:white;
     text-decoration:none;
-    padding:15px 35px;
-    border-radius:50px;
-    font-size:18px;
+   
     transition:.3s;
 }
 
@@ -193,10 +174,10 @@ input[type="file"]{
 
 footer{
     text-align:center;
-    padding:25px;
+   
     background:#111827;
     color:white;
-    margin-top:50px;
+   
 }
 </style>
 </head>
