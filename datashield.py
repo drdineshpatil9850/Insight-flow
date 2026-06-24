@@ -15,33 +15,452 @@ import hashlib
 import json
 import os
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insight Flow</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+    color:#333;
+}
+
+header{
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    color:white;
+    text-align:center;
+    padding:80px 20px;
+}
+
+header h1{
+    font-size:3.5rem;
+    margin-bottom:15px;
+}
+
+header p{
+    font-size:1.2rem;
+    max-width:700px;
+    margin:auto;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin:60px 0;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h3{
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.analytics{
+    margin:60px 0;
+}
+
+.analytics h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.chart-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:25px;
+}
+
+.chart-card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.chart-title{
+    margin-bottom:15px;
+    font-weight:600;
+}
+
+.bar-chart{
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+    height:180px;
+}
+
+.bar{
+    flex:1;
+    border-radius:8px 8px 0 0;
+    background:linear-gradient(to top,#2563eb,#60a5fa);
+}
+
+.b1{height:60%;}
+.b2{height:90%;}
+.b3{height:45%;}
+.b4{height:100%;}
+.b5{height:75%;}
+
+.pie-chart{
+    width:180px;
+    height:180px;
+    margin:auto;
+    border-radius:50%;
+    background:
+    conic-gradient(
+        #2563eb 0% 40%,
+        #06b6d4 40% 70%,
+        #8b5cf6 70% 100%
+    );
+}
+
+.upload-section{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    margin:60px 0;
+}
+
+.upload-section h2{
+    margin-bottom:15px;
+}
+
+.upload-section p{
+    margin-bottom:20px;
+    color:#666;
+}
+
+input[type="file"]{
+    padding:10px;
+}
+
+.cta{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.cta h2{
+    margin-bottom:15px;
+}
+
+.cta p{
+    margin-bottom:25px;
+}
+
+.btn{
+    background:#2563eb;
+    color:white;
+    text-decoration:none;
+    padding:15px 35px;
+    border-radius:50px;
+    font-size:18px;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    background:#111827;
+    color:white;
+    margin-top:50px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Insight Flow</h1>
+    <p>
+        Transform raw data into meaningful insights. Upload your files and
+        instantly visualize data through interactive charts, graphs, and analytics dashboards.
+    </p>
+</header>
+
+<div class="container">
+
+    <section class="features">
+        <div class="card">
+            <h3>📁 Easy Upload</h3>
+            <p>Upload CSV, Excel, or JSON files with a single click.</p>
+        </div>
+
+        <div class="card">
+            <h3>📊 Smart Visualization</h3>
+            <p>Generate bar charts, pie charts, line charts, and more automatically.</p>
+        </div>
+
+        <div class="card">
+            <h3>⚡ Instant Insights</h3>
+            <p>Analyze trends, patterns, and performance in seconds.</p>
+        </div>
+
+        <div class="card">
+            <h3>📈 Interactive Dashboard</h3>
+            <p>Explore your data through dynamic visual reports.</p>
+        </div>
+    </section>
+
+    <section class="analytics">
+        <h2>Sample Data Visualizations</h2>
+
+        <div class="chart-container">
+
+            <div class="chart-card">
+                <div class="chart-title">Sales Performance (Bar Chart)</div>
+                <div class="bar-chart">
+                    <div class="bar b1"></div>
+                    <div class="bar b2"></div>
+                    <div class="bar b3"></div>
+                    <div class="bar b4"></div>
+                    <div class="bar b5"></div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Category Distribution (Pie Chart)</div>
+                <div class="pie-chart"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="upload-section">
+        <h2>Upload Your Data</h2>
+        <p>
+            Upload your dataset and Insight Flow will automatically analyze it
+            and represent the information using multiple chart formats such as
+            bar charts, pie charts, line graphs, and trend visualizations.
+        </p>
+
+        <input type="file">
+    </section>
+
+</div>
+
+<section class="cta">
+    <h2>Turn Data Into Actionable Insights</h2>
+    <p>
+        Start exploring your data and discover trends through beautiful visualizations.
+    </p>
+
+    <a href="#" class="btn">Get Started</a>
+</section>
+
+<footer>
+    © 2026 Insight Flow | Data Analytics & Visualization Platform
+</footer>
+
+</body>
+</html>
 
 
 
 
-st.title("Insight flow")
-st.markdown(
-        """
-
-        <style>
-        .stApp {
-           background-color: "#1E293B"
-           color: green;
-
-        }
-        </style>
-        """,
-
-        unsafe_allow_html=True
-)
 
 
 
 
-import streamlit as st
-import json
-import hashlib
-import os
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 USERS_FILE = "users.json"
 
