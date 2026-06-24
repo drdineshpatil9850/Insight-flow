@@ -36,7 +36,7 @@ body{
 }
 
 header{
-    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    background:linear-gradient(#2563eb,#06b6d4);
     color:white;
     text-align:center;
     padding:80px 20px;
@@ -61,7 +61,7 @@ header p{
 
 .features{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    grid-template-columns:repeat(250px,1fr);
     gap:20px;
     margin:60px 0;
 }
