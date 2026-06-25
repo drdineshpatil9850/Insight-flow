@@ -15,256 +15,242 @@ import hashlib
 import json
 import os
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insight Flow</title>
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
+# ---------------------------
+# Functions
+# ---------------------------
+def upload_file():
+    file_path = filedialog.askopenfilename(
+        title="Select Dataset",
+        filetypes=[
+            ("CSV Files", "*.csv"),
+            ("Excel Files", "*.xlsx"),
+            ("All Files", "*.*")
+        ]
+    )
 
-body{
-    background:#f4f7fc;
-    color:#333;
-}
+    if file_path:
+        file_label.config(text=f"Selected:\n{file_path}")
 
-header{
-    background:linear-gradient(#2563eb,#06b6d4);
-    color:white;
-    text-align:center;
-    
-}
+def get_started():
+    messagebox.showinfo(
+        "Insight Flow",
+        "Dataset uploaded successfully!\nGenerating visual insights..."
+    )
 
-header h1{
-    font-size:3.5rem;
-    
-}
+# ---------------------------
+# Main Window
+# ---------------------------
+root = tk.Tk()
+root.title("Insight Flow")
+root.geometry("1100x700")
+root.configure(bg="#F4F7FC")
 
-header p{
-    font-size:1.2rem;
-   
-    margin:auto;
-}
+# ---------------------------
+# Header
+# ---------------------------
+title = tk.Label(
+    root,
+    text="Insight Flow",
+    font=("Segoe UI", 32, "bold"),
+    bg="#F4F7FC",
+    fg="#1E3A8A"
+)
+title.pack(pady=15)
 
-.container{
-    width:90%;
-   
-    margin:auto;
-}
+subtitle = tk.Label(
+    root,
+    text="Transform your CSV/XLSX data into powerful visual insights",
+    font=("Segoe UI", 14),
+    bg="#F4F7FC",
+    fg="#555"
+)
+subtitle.pack()
 
+# ---------------------------
+# Upload Section
+# ---------------------------
+upload_frame = tk.Frame(
+    root,
+    bg="white",
+    bd=2,
+    relief="groove"
+)
+upload_frame.pack(pady=25, padx=50, fill="x")
 
-.card{
-    background:white;
-   
-    transition:.3s;
-}
+upload_title = tk.Label(
+    upload_frame,
+    text="📂 Upload CSV / XLSX File",
+    font=("Segoe UI", 18, "bold"),
+    bg="white"
+)
+upload_title.pack(pady=15)
 
+upload_btn = tk.Button(
+    upload_frame,
+    text="Choose File",
+    font=("Segoe UI", 12),
+    bg="#2563EB",
+    fg="white",
+    padx=20,
+    pady=8,
+    command=upload_file
+)
+upload_btn.pack()
 
+file_label = tk.Label(
+    upload_frame,
+    text="No file selected",
+    bg="white",
+    fg="gray",
+    font=("Segoe UI", 10)
+)
+file_label.pack(pady=15)
 
-.card h3{
-    color:#2563eb;
-    
-}
+# ---------------------------
+# Charts Preview Section
+# ---------------------------
+preview_title = tk.Label(
+    root,
+    text="Supported Visualizations",
+    font=("Segoe UI", 20, "bold"),
+    bg="#F4F7FC",
+    fg="#111827"
+)
+preview_title.pack(pady=10)
 
+charts_frame = tk.Frame(root, bg="#F4F7FC")
+charts_frame.pack()
 
+# Histogram
+hist_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
+hist_frame.grid(row=0, column=0, padx=15)
 
-.analytics h2{
-    text-align:center;
-   
-}
+canvas1 = tk.Canvas(hist_frame, width=180, height=140, bg="white")
+canvas1.pack()
+canvas1.create_rectangle(20, 100, 50, 40, fill="#3B82F6")
+canvas1.create_rectangle(60, 80, 90, 40, fill="#60A5FA")
+canvas1.create_rectangle(100, 50, 130, 40, fill="#2563EB")
+canvas1.create_rectangle(140, 90, 170, 40, fill="#93C5FD")
 
-.chart-container{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(1fr));
-   
-}
+tk.Label(
+    hist_frame,
+    text="Histogram",
+    bg="white",
+    font=("Segoe UI", 12, "bold")
+).pack(pady=5)
 
-.chart-card{
-    background:white;
-   
-    
-   
-}
+# Pie Chart
+pie_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
+pie_frame.grid(row=0, column=1, padx=15)
 
+canvas2 = tk.Canvas(pie_frame, width=180, height=140, bg="white")
+canvas2.pack()
 
+canvas2.create_arc(
+    30, 20, 140, 130,
+    start=0, extent=120,
+    fill="#2563EB"
+)
 
-.bar-chart{
-    display:flex;
-    align-items:flex-end;
-  
-}
+canvas2.create_arc(
+    30, 20, 140, 130,
+    start=120, extent=90,
+    fill="#60A5FA"
+)
 
-.bar{
-    flex:1;
-   
-    background:linear-gradient(to top,#2563eb,#60a5fa);
-}
+canvas2.create_arc(
+    30, 20, 140, 130,
+    start=210, extent=150,
+    fill="#93C5FD"
+)
 
-.b1{height:60%;}
-.b2{height:90%;}
-.b3{height:45%;}
-.b4{height:100%;}
-.b5{height:75%;}
+tk.Label(
+    pie_frame,
+    text="Pie Chart",
+    bg="white",
+    font=("Segoe UI", 12, "bold")
+).pack(pady=5)
 
-.pie-chart{
-   
-    margin:auto;
-    border-radius:50%;
-    background:
-    conic-gradient(
-        #2563eb 0% 40%,
-        #06b6d4 40% 70%,
-        #8b5cf6 70% 100%
-    );
-}
+# Line Chart
+line_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
+line_frame.grid(row=0, column=2, padx=15)
 
-.upload-section{
-    background:white;
-    
-    text-align:center;
-    
-    
-}
+canvas3 = tk.Canvas(line_frame, width=180, height=140, bg="white")
+canvas3.pack()
 
-.upload-section h2{
-   
-}
+canvas3.create_line(
+    20, 100,
+    60, 80,
+    100, 90,
+    140, 50,
+    170, 30,
+    fill="#10B981",
+    width=3
+)
 
-.upload-section p{
-    
-    color:#666;
-}
+tk.Label(
+    line_frame,
+    text="Line Chart",
+    bg="white",
+    font=("Segoe UI", 12, "bold")
+).pack(pady=5)
 
-input[type="file"]{
-  
-}
+# Bar Chart
+bar_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
+bar_frame.grid(row=0, column=3, padx=15)
 
-.cta{
-    text-align:center;
-   }
+canvas4 = tk.Canvas(bar_frame, width=180, height=140, bg="white")
+canvas4.pack()
 
+canvas4.create_rectangle(20, 70, 50, 120, fill="#F97316")
+canvas4.create_rectangle(70, 40, 100, 120, fill="#FB923C")
+canvas4.create_rectangle(120, 20, 150, 120, fill="#EA580C")
 
-   
+tk.Label(
+    bar_frame,
+    text="Bar Chart",
+    bg="white",
+    font=("Segoe UI", 12, "bold")
+).pack(pady=5)
 
+# ---------------------------
+# Description
+# ---------------------------
+desc = tk.Label(
+    root,
+    text="""
+Upload your CSV or Excel file and instantly explore:
+• Histograms
+• Pie Charts
+• Bar Charts
+• Line Charts
+• Data Insights & Analytics
+""",
+    bg="#F4F7FC",
+    font=("Segoe UI", 12),
+    justify="center"
+)
+desc.pack(pady=25)
 
-.btn{
-    background:#2563eb;
-    color:white;
-    text-decoration:none;
-   
-    transition:.3s;
-}
+# ---------------------------
+# Get Started Button
+# ---------------------------
+start_btn = tk.Button(
+    root,
+    text="Get Started",
+    font=("Segoe UI", 16, "bold"),
+    bg="#10B981",
+    fg="white",
+    padx=30,
+    pady=12,
+    command=get_started
+)
+start_btn.pack(side="bottom", pady=25)
 
-.btn:hover{
-    background:#1d4ed8;
-}
-
-footer{
-    text-align:center;
-   
-    background:#111827;
-    color:white;
-   
-}
-</style>
-</head>
-<body>
-
-<header>
-    <h1>Insight Flow</h1>
-    <p>
-        Transform raw data into meaningful insights. Upload your files and
-        instantly visualize data through interactive charts, graphs, and analytics dashboards.
-    </p>
-</header>
-
-<div class="container">
-
-    <section class="features">
-        <div class="card">
-            <h3>📁 Easy Upload</h3>
-            <p>Upload CSV, Excel, or JSON files with a single click.</p>
-        </div>
-
-        <div class="card">
-            <h3>📊 Smart Visualization</h3>
-            <p>Generate bar charts, pie charts, line charts, and more automatically.</p>
-        </div>
-
-        <div class="card">
-            <h3>⚡ Instant Insights</h3>
-            <p>Analyze trends, patterns, and performance in seconds.</p>
-        </div>
-
-        <div class="card">
-            <h3>📈 Interactive Dashboard</h3>
-            <p>Explore your data through dynamic visual reports.</p>
-        </div>
-    </section>
-
-    <section class="analytics">
-        <h2>Sample Data Visualizations</h2>
-
-        <div class="chart-container">
-
-            <div class="chart-card">
-                <div class="chart-title">Sales Performance (Bar Chart)</div>
-                <div class="bar-chart">
-                    <div class="bar b1"></div>
-                    <div class="bar b2"></div>
-                    <div class="bar b3"></div>
-                    <div class="bar b4"></div>
-                    <div class="bar b5"></div>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Category Distribution (Pie Chart)</div>
-                <div class="pie-chart"></div>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="upload-section">
-        <h2>Upload Your Data</h2>
-        <p>
-            Upload your dataset and Insight Flow will automatically analyze it
-            and represent the information using multiple chart formats such as
-            bar charts, pie charts, line graphs, and trend visualizations.
-        </p>
-
-        <input type="file">
-    </section>
-
-</div>
-
-<section class="cta">
-    <h2>Turn Data Into Actionable Insights</h2>
-    <p>
-        Start exploring your data and discover trends through beautiful visualizations.
-    </p>
-
-    <a href="#" class="btn">Get Started</a>
-</section>
-
-<footer>
-    © 2026 Insight Flow | Data Analytics & Visualization Platform
-</footer>
-
-</body>
-</html>
-
-
-
-
+root.mainloop()
 
 
 
