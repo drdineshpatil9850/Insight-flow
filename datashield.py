@@ -15,252 +15,189 @@ import hashlib
 import json
 import os
 
-import tkinter as tk
-from tkinter import filedialog, messagebox
+
+
+import plotly.express as px
 
 # ---------------------------
-# Functions
+# Page Config
 # ---------------------------
-def upload_file():
-    file_path = filedialog.askopenfilename(
-        title="Select Dataset",
-        filetypes=[
-            ("CSV Files", "*.csv"),
-            ("Excel Files", "*.xlsx"),
-            ("All Files", "*.*")
-        ]
-    )
-
-    if file_path:
-        file_label.config(text=f"Selected:\n{file_path}")
-
-def get_started():
-    messagebox.showinfo(
-        "Insight Flow",
-        "Dataset uploaded successfully!\nGenerating visual insights..."
-    )
+st.set_page_config(
+    page_title="Insight Flow",
+    page_icon="📊",
+    layout="wide"
+)
 
 # ---------------------------
-# Main Window
+# Custom CSS
 # ---------------------------
-root = tk.Tk()
-root.title("Insight Flow")
-root.geometry("1100x700")
-root.configure(bg="#F4F7FC")
+st.markdown("""
+<style>
+.main-header{
+    text-align:center;
+    padding:20px;
+}
+
+.title{
+    font-size:52px;
+    font-weight:bold;
+    color:#1E88E5;
+}
+
+.subtitle{
+    font-size:20px;
+    color:gray;
+}
+
+.upload-box{
+    border:2px dashed #1E88E5;
+    border-radius:15px;
+    padding:30px;
+    text-align:center;
+    background-color:#f8fbff;
+}
+
+.stButton>button{
+    width:100%;
+    height:55px;
+    font-size:20px;
+    font-weight:bold;
+    border-radius:10px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ---------------------------
 # Header
 # ---------------------------
-title = tk.Label(
-    root,
-    text="Insight Flow",
-    font=("Segoe UI", 32, "bold"),
-    bg="#F4F7FC",
-    fg="#1E3A8A"
-)
-title.pack(pady=15)
+st.markdown("""
+<div class="main-header">
+    <div class="title">📊 Insight Flow</div>
+    <div class="subtitle">
+        Transform your CSV/XLSX data into powerful visual insights
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-subtitle = tk.Label(
-    root,
-    text="Transform your CSV/XLSX data into powerful visual insights",
-    font=("Segoe UI", 14),
-    bg="#F4F7FC",
-    fg="#555"
-)
-subtitle.pack()
+st.write("")
 
 # ---------------------------
 # Upload Section
 # ---------------------------
-upload_frame = tk.Frame(
-    root,
-    bg="white",
-    bd=2,
-    relief="groove"
-)
-upload_frame.pack(pady=25, padx=50, fill="x")
+st.markdown("""
+<div class="upload-box">
+    <h3>📂 Upload CSV / XLSX File</h3>
+    <p>Get your data automatically visualized into various charts and dashboards.</p>
+</div>
+""", unsafe_allow_html=True)
 
-upload_title = tk.Label(
-    upload_frame,
-    text="📂 Upload CSV / XLSX File",
-    font=("Segoe UI", 18, "bold"),
-    bg="white"
+uploaded_file = st.file_uploader(
+    "",
+    type=["csv", "xlsx"]
 )
-upload_title.pack(pady=15)
 
-upload_btn = tk.Button(
-    upload_frame,
-    text="Choose File",
-    font=("Segoe UI", 12),
-    bg="#2563EB",
-    fg="white",
-    padx=20,
-    pady=8,
-    command=upload_file
-)
-upload_btn.pack()
-
-file_label = tk.Label(
-    upload_frame,
-    text="No file selected",
-    bg="white",
-    fg="gray",
-    font=("Segoe UI", 10)
-)
-file_label.pack(pady=15)
+st.write("---")
 
 # ---------------------------
-# Charts Preview Section
+# Sample Charts Section
 # ---------------------------
-preview_title = tk.Label(
-    root,
-    text="Supported Visualizations",
-    font=("Segoe UI", 20, "bold"),
-    bg="#F4F7FC",
-    fg="#111827"
-)
-preview_title.pack(pady=10)
+st.subheader("📈 Dashboard Preview")
 
-charts_frame = tk.Frame(root, bg="#F4F7FC")
-charts_frame.pack()
+col1, col2 = st.columns(2)
 
-# Histogram
-hist_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
-hist_frame.grid(row=0, column=0, padx=15)
+# Sample Data
+np.random.seed(42)
 
-canvas1 = tk.Canvas(hist_frame, width=180, height=140, bg="white")
-canvas1.pack()
-canvas1.create_rectangle(20, 100, 50, 40, fill="#3B82F6")
-canvas1.create_rectangle(60, 80, 90, 40, fill="#60A5FA")
-canvas1.create_rectangle(100, 50, 130, 40, fill="#2563EB")
-canvas1.create_rectangle(140, 90, 170, 40, fill="#93C5FD")
+months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
 
-tk.Label(
-    hist_frame,
-    text="Histogram",
-    bg="white",
-    font=("Segoe UI", 12, "bold")
-).pack(pady=5)
+sales = pd.DataFrame({
+    "Month": months,
+    "Revenue": np.random.randint(1000, 5000, 6)
+})
 
-# Pie Chart
-pie_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
-pie_frame.grid(row=0, column=1, padx=15)
+products = pd.DataFrame({
+    "Category": ["A", "B", "C", "D"],
+    "Sales": [35, 25, 20, 20]
+})
 
-canvas2 = tk.Canvas(pie_frame, width=180, height=140, bg="white")
-canvas2.pack()
+with col1:
+    st.markdown("### Revenue Trend")
+    fig1 = px.line(
+        sales,
+        x="Month",
+        y="Revenue",
+        markers=True,
+        template="plotly_white"
+    )
+    st.plotly_chart(fig1, use_container_width=True)
 
-canvas2.create_arc(
-    30, 20, 140, 130,
-    start=0, extent=120,
-    fill="#2563EB"
-)
-
-canvas2.create_arc(
-    30, 20, 140, 130,
-    start=120, extent=90,
-    fill="#60A5FA"
-)
-
-canvas2.create_arc(
-    30, 20, 140, 130,
-    start=210, extent=150,
-    fill="#93C5FD"
-)
-
-tk.Label(
-    pie_frame,
-    text="Pie Chart",
-    bg="white",
-    font=("Segoe UI", 12, "bold")
-).pack(pady=5)
-
-# Line Chart
-line_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
-line_frame.grid(row=0, column=2, padx=15)
-
-canvas3 = tk.Canvas(line_frame, width=180, height=140, bg="white")
-canvas3.pack()
-
-canvas3.create_line(
-    20, 100,
-    60, 80,
-    100, 90,
-    140, 50,
-    170, 30,
-    fill="#10B981",
-    width=3
-)
-
-tk.Label(
-    line_frame,
-    text="Line Chart",
-    bg="white",
-    font=("Segoe UI", 12, "bold")
-).pack(pady=5)
-
-# Bar Chart
-bar_frame = tk.Frame(charts_frame, bg="white", bd=1, relief="solid")
-bar_frame.grid(row=0, column=3, padx=15)
-
-canvas4 = tk.Canvas(bar_frame, width=180, height=140, bg="white")
-canvas4.pack()
-
-canvas4.create_rectangle(20, 70, 50, 120, fill="#F97316")
-canvas4.create_rectangle(70, 40, 100, 120, fill="#FB923C")
-canvas4.create_rectangle(120, 20, 150, 120, fill="#EA580C")
-
-tk.Label(
-    bar_frame,
-    text="Bar Chart",
-    bg="white",
-    font=("Segoe UI", 12, "bold")
-).pack(pady=5)
+with col2:
+    st.markdown("### Sales Distribution")
+    fig2 = px.pie(
+        products,
+        names="Category",
+        values="Sales",
+        hole=0.4
+    )
+    st.plotly_chart(fig2, use_container_width=True)
 
 # ---------------------------
-# Description
+# More Preview Charts
 # ---------------------------
-desc = tk.Label(
-    root,
-    text="""
-Upload your CSV or Excel file and instantly explore:
-• Histograms
-• Pie Charts
-• Bar Charts
-• Line Charts
-• Data Insights & Analytics
-""",
-    bg="#F4F7FC",
-    font=("Segoe UI", 12),
-    justify="center"
-)
-desc.pack(pady=25)
+col3, col4 = st.columns(2)
+
+with col3:
+    fig3 = px.bar(
+        sales,
+        x="Month",
+        y="Revenue",
+        color="Revenue",
+        template="plotly_white"
+    )
+    st.plotly_chart(fig3, use_container_width=True)
+
+with col4:
+    scatter_data = pd.DataFrame({
+        "X": np.random.randint(1, 100, 50),
+        "Y": np.random.randint(1, 100, 50)
+    })
+
+    fig4 = px.scatter(
+        scatter_data,
+        x="X",
+        y="Y",
+        template="plotly_white"
+    )
+    st.plotly_chart(fig4, use_container_width=True)
+
+st.write("---")
+
+# ---------------------------
+# Features
+# ---------------------------
+st.subheader("✨ What Insight Flow Offers")
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.info("📊 Automatic Chart Generation")
+
+with c2:
+    st.info("📈 Interactive Dashboards")
+
+with c3:
+    st.info("📑 CSV & Excel Data Analysis")
+
+st.write("")
+st.write("")
 
 # ---------------------------
 # Get Started Button
 # ---------------------------
-start_btn = tk.Button(
-    root,
-    text="Get Started",
-    font=("Segoe UI", 16, "bold"),
-    bg="#10B981",
-    fg="white",
-    padx=30,
-    pady=12,
-    command=get_started
-)
-start_btn.pack(side="bottom", pady=25)
-
-root.mainloop()
-
-
-
-
-
-
-
-
-
-
+if st.button("🚀 Get Started"):
+    st.success(
+        "Upload a CSV/XLSX file and start exploring insights through multiple visualizations!"
+    )
 
 
 
