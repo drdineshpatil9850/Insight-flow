@@ -136,7 +136,7 @@ with col2:
         values="Sales",
         hole=0.4
     )
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width="strech")
 
 # ---------------------------
 # More Preview Charts
@@ -151,7 +151,7 @@ with col3:
         color="Revenue",
         template="plotly_white"
     )
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, use_container_width="strech")
 
 with col4:
     scatter_data = pd.DataFrame({
@@ -165,7 +165,7 @@ with col4:
         y="Y",
         template="plotly_white"
     )
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4, use_container_width="strech")
 
 st.write("---")
 
