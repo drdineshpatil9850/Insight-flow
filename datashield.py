@@ -91,10 +91,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader(
-    "",
-    type=["csv", "xlsx"]
-)
+
 
 st.write("---")
 
